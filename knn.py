@@ -43,9 +43,22 @@ def knn(T, x, k, weighted=False):
     neighbors.sort(key = lambda ex: ex[1])
     # neighbors is now k nearest neighbors
     neighbors = neighbors[:k]
-    
-    #DEBUG CODE
-    print(neighbors)
+
+    results = {}
+    # wi = (dk - di) / dk - d1 if dk != d1 else 1
+    if weighted:
+        min_max = (min(neighbors, key = lambda n: n[1]), 
+                    max(neighbors, key = lambda n: n[1]))
+        #TODO: finished weighted 
+
+
+    else:
+        #DEBUG CODE
+        for n in neighbors:
+            if n[0] not in results:
+                results[n[0]] = 0
+            results[n[0]] += 1
+        print(max(results, key = lambda s:results[s]))
 
 def distance(x, ex):
     diffs_squared = []
@@ -64,6 +77,7 @@ def distance(x, ex):
     Normalize data using x = (x-MIN)/(MAX - MIN)
     Doesn't normalized discrete values because how?
 '''
+
 def normalize(data):
     n_attributes = len(data[0]) - 1 # class is not included
     attribute_tally = [ [data[x][y] for x in range(len(data))] for y in range(n_attributes) ]
