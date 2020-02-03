@@ -2,7 +2,9 @@
     Authors: chriscamarillo, aig77
     ECE548 Project 1
     Description:
-        K-NN classifiers, weighted distances. Using three domains from the UCI repository,compare the testing-set performance of two k-NN approaches: one without example weighting, and the other with example weighting.
+        K-NN classifiers, weighted distances. Using three domains from the UCI
+        repository,compare the testing-set performance of two k-NN approaches: one
+        without example weighting, and the other with example weighting.
     
     2/2/2020
 '''
