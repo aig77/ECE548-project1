@@ -1,3 +1,12 @@
+'''
+    Authors: chriscamarillo, aig77
+    ECE548 Project 1
+    Description:
+        K-NN classifiers, weighted distances. Using three domains from the UCI repository,compare the testing-set performance of two k-NN approaches: one without example weighting, and the other with example weighting.
+    
+    2/2/2020
+'''
+
 import math
 
 def read_data(name):
@@ -14,12 +23,14 @@ def read_data(name):
         data[i] = parse(data[i])
 
     return data
-
-# T = training set, x = unknown instance
-''' The last element of an example is assumed to be its class
-    therefore x's last element should be ommited
+ 
+''' 
+    * T = training set
+    * x = unknown instance
+    * k = number of nearest neighbors
+    * The last element of an example is assumed to be its class
+      therefore x's last element should be ommited
 '''
-
 def knn(T, x, k, weighted=False):
     # TODO: normalize T such that each attribute is between 0-1
     # TODO: implement weighted
