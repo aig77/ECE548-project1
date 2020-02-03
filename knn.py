@@ -35,32 +35,32 @@ def read_data(name):
 '''
 def knn(T, x, k, weighted=False):
     # TODO: normalize T such that each attribute is between 0-1
-    T = normalize(T)
+    #T = normalize(T)
     
     # obtain possible neighbors by (class, distance)
     # and keep K nearest
     neighbors = [(ex[-1], distance(x, ex)) for ex in T]
     neighbors.sort(key = lambda ex: ex[1])
+
     # neighbors is now k nearest neighbors
+
     neighbors = neighbors[:k]
 
     print(neighbors)
-
+    
     results = {}
+
     # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
     if weighted:
         #TODO: finished weighted
         n_min = min(neighbors, key = lambda n: n[1])
         n_max = max(neighbors, key = lambda n: n[1])
+
         for n in neighbors:
-            print(n_max[1])
-            print(n[1])
-            print(n_min[1])
             if n[0] not in results:
                 results[n[0]] = 0
             results[n[0]] += (n_max[1] - n[1]) / (n_max[1] - n_min[1]) if not n_max[1] == n_min[1] else 1
         print(results)
-
     else:
         for n in neighbors:
             if n[0] not in results:
@@ -68,6 +68,7 @@ def knn(T, x, k, weighted=False):
             results[n[0]] += 1
         print(results)
 
+    # CLASSIFY 
     print(max(results, key = lambda s:results[s]))
 
 def distance(x, ex):
@@ -128,7 +129,13 @@ if __name__ == "__main__":
     iris_data = read_data(iris)
     abalone_data = read_data(abalone)
 
+    print('NOW AT 2')
+    print(iris_data[2])
     knn(iris_data, iris_data[2], 3, True)
-    
-    
+    print('NOW AT 90')
+    print(iris_data[90])
+    knn(iris_data, iris_data[90], 3, True)
+    print(iris_data[110])
+    print('NOW AT 110')
+    knn(iris_data, iris_data[110], 3, True)
     
