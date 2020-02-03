@@ -53,10 +53,13 @@ def knn(T, x, k, weighted=False):
         n_min = min(neighbors, key = lambda n: n[1])
         n_max = max(neighbors, key = lambda n: n[1])
         for n in neighbors:
+            print(n_max[1])
+            print(n[1])
+            print(n_min[1])
             if n[0] not in results:
                 results[n[0]] = 0
             results[n[0]] += (n_max[1] - n[1]) / (n_max[1] - n_min[1]) if not n_max[1] == n_min[1] else 1
-            print(results)
+        print(results)
 
     else:
         for n in neighbors:
