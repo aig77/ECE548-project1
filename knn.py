@@ -28,8 +28,7 @@ def knn(T, x, k, weighted=False):
     # and keep K nearest
     neighbors = [(ex[-1], distance(x, ex)) for ex in T]
     neighbors.sort(key = lambda ex: ex[1])
-    #REVISION: should be k+1 to include the first k values ([:] is not end inclusive)
-    neighbors = neighbors[:k+1]
+    neighbors = neighbors[:k]
     
     #DEBUG CODE
     print(neighbors)
