@@ -41,12 +41,15 @@ def knn(T, x, k, weighted=False):
     # and keep K nearest
     neighbors = [(ex[-1], distance(x, ex)) for ex in T]
     neighbors.sort(key = lambda ex: ex[1])
+    # neighbors is now k nearest neighbors
     neighbors = neighbors[:k]
     
     #DEBUG CODE
     print(neighbors)
     
-    
+def knn(T, x, k, weighted=True):
+
+
 def distance(x, ex):
     diffs_squared = []
 
@@ -58,6 +61,18 @@ def distance(x, ex):
             diffs_squared.append((ex[i] - x[i]) ** 2)
     
     return math.sqrt(sum(diffs_squared))
+
+'''
+    Normalize data using x = (x-MIN)/(MAX - MIN)
+    Exclude last element in each data array
+'''
+def normalize(data):
+    #TODO: find MIN and MAX from each attribute in the data
+    #TODO: iterate through data, parse into float and normalize using equation above
+    #TODO: exception handling discrete values (cannot be normalized)
+
+    mins = []
+    maxes = []
 
 
 # convert strings into types
