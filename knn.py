@@ -1,5 +1,5 @@
 '''
-    Authors: chriscamarillo, aig77
+    Authors: chriscamarillo, aig77, juanSLopez
     ECE548 Project 1
     Description:
         K-NN classifiers, weighted distances. Using three domains from the UCI
@@ -35,7 +35,7 @@ def read_data(name):
 '''
 def knn(T, x, k, weighted=False):
     # TODO: normalize T such that each attribute is between 0-1
-    # TODO: implement weighted
+    T = normalize(T)
     
     # obtain possible neighbors by (class, distance)
     # and keep K nearest
@@ -46,15 +46,13 @@ def knn(T, x, k, weighted=False):
     
     #DEBUG CODE
     print(neighbors)
-    
-def knn(T, x, k, weighted=True):
-    return 0
 
 def distance(x, ex):
     diffs_squared = []
 
     # if it is a discrete difference count them by 1
-    for i in range(len(x)):
+    # ommit CLASS 
+    for i in range(len(x) - 1):
         if type(x[i]) is str:
             diffs_squared.append(1 if x[i] != ex[i] else 0)
         else:
@@ -64,16 +62,31 @@ def distance(x, ex):
 
 '''
     Normalize data using x = (x-MIN)/(MAX - MIN)
-    Exclude last element in each data array
+    Doesn't normalized discrete values because how?
 '''
 def normalize(data):
-    #TODO: find MIN and MAX from each attribute in the data
-    #TODO: iterate through data, parse into float and normalize using equation above
-    #TODO: exception handling discrete values (cannot be normalized)
+    n_attributes = len(data[0]) - 1 # class is not included
+    attribute_tally = [ [data[x][y] for x in range(len(data))] for y in range(n_attributes) ]
 
-    mins = []
-    maxes = []
-
+    min_max = [ (min(a), max(a)) for a in attribute_tally ]
+    
+    normalized_data = []
+    for ex in data:
+        normalized_ex = []
+        
+        for a_i in range(n_attributes):
+            if type(ex[a_i]) is float:
+                normalized_a = 1
+                if min_max[a_i][0] != min_max[a_i][1]:
+                    normalized_a = (ex[a_i] - min_max[a_i][0]) / (min_max[a_i][1] - min_max[a_i][0])
+            
+                normalized_ex.append(normalized_a)
+            else:
+                normalized_ex.append(ex[a_i]) # strings don't get normalized
+                
+        normalized_ex.append(ex[-1])  # append class onto end for further processing
+        normalized_data.append(normalized_ex)
+    return normalized_data
 
 # convert strings into types
 def parse(attributes):
