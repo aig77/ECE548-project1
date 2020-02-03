@@ -44,21 +44,28 @@ def knn(T, x, k, weighted=False):
     # neighbors is now k nearest neighbors
     neighbors = neighbors[:k]
 
-    results = {}
-    # wi = (dk - di) / dk - d1 if dk != d1 else 1
-    if weighted:
-        min_max = (min(neighbors, key = lambda n: n[1]), 
-                    max(neighbors, key = lambda n: n[1]))
-        #TODO: finished weighted 
+    print(neighbors)
 
+    results = {}
+    # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
+    if weighted:
+        #TODO: finished weighted
+        n_min = min(neighbors, key = lambda n: n[1])
+        n_max = max(neighbors, key = lambda n: n[1])
+        for n in neighbors:
+            if n[0] not in results:
+                results[n[0]] = 0
+            results[n[0]] += (n_max[1] - n[1]) / (n_max[1] - n_min[1]) if not n_max[1] == n_min[1] else 1
+            print(results)
 
     else:
-        #DEBUG CODE
         for n in neighbors:
             if n[0] not in results:
                 results[n[0]] = 0
             results[n[0]] += 1
-        print(max(results, key = lambda s:results[s]))
+        print(results)
+
+    print(max(results, key = lambda s:results[s]))
 
 def distance(x, ex):
     diffs_squared = []
@@ -118,7 +125,7 @@ if __name__ == "__main__":
     iris_data = read_data(iris)
     abalone_data = read_data(abalone)
 
-    knn(iris_data, iris_data[2], 3)
+    knn(iris_data, iris_data[2], 3, True)
     
     
     
