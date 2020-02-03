@@ -48,7 +48,7 @@ def knn(T, x, k, weighted=False):
     print(neighbors)
     
 def knn(T, x, k, weighted=True):
-
+    return 0
 
 def distance(x, ex):
     diffs_squared = []
