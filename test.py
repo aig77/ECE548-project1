@@ -54,24 +54,22 @@ if __name__ == '__main__':
     # include data file names
     abalone = "abalone.data"
     iris = "iris.data"
-    ecoli = "ecoli.data"
+    ionosphere = "ionoshpere.data"
 
     # read from files and store into data arrays
     iris_data = read_data(iris)
     abalone_data = read_data(abalone)
-    ecoli_data = read_data(ecoli)
+    ionosphere_data = read_data(ionosphere)
 
     '''
     print("\nThis is for irises:\n" + "-"*40)
-    knn(iris_data, iris_data[2], 5, True, True)
+    test_8020(iris_data, 5)
 
     print("\nThis is for abalones:\n" + "-"*40)
-    knn(abalone_data, abalone_data[90], 5, True, True)
+    test_8020(abalone_data, 5)
 
-    # This poopoo broke bc of the data file
-    # TODO: find new dataset asap << LMAO!
-    print("\nThis is for ecoli:\n" + "-"*40)
-    knn(ecoli_data, ecoli_data[2], 5, True, True)
+    print("\nThis is for ionosphere:\n" + "-"*40)
+    test_8020(ionosphere_data, 5)
     '''
 
     # testing
