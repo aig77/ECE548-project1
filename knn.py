@@ -11,21 +11,6 @@
 
 import math
 from random import shuffle
-
-def read_data(name):
-    f = open(name, "r")
-    data = []
-f
-    f1 = f.readlines()
-    for x in f1:
-        if not x == '\n':
-            data.append(x[0:-1])
-
-    for i in range(len(data)):
-        data[i] = data[i].split(",")
-        data[i] = parse(data[i])
-
-    return data
  
 ''' 
     * T = training set
@@ -34,7 +19,8 @@ f
     * The last element of an example is assumed to be its class
       therefore x's last element should be ommited
 '''
-def knn(T, x, k, normalized = False, weighted=False):
+
+def knn(T, x, k, normalized = False, weighted=False, debug=False):
     # TODO: normalize T such that each attribute is between 0-1
     if normalized:
         T = normalize(T)
@@ -46,9 +32,11 @@ def knn(T, x, k, normalized = False, weighted=False):
 
     # neighbors is now k nearest neighbors
     neighbors = neighbors[:k]
+
+    if debug:
+        print(neighbors)
     
     results = {}
-
     # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
     if weighted:
         n_min = min(neighbors, key = lambda n: n[1])
@@ -74,7 +62,7 @@ def distance(x, ex):
 
     # if it is a discrete difference count them by 1
     # ommit CLASS 
-    for i in range(len(x) - 1):
+    for i in range(len(x)):
         if type(x[i]) is str:
             diffs_squared.append(1 if x[i] != ex[i] else 0)
         else:
@@ -100,7 +88,7 @@ def normalize(data):
         normalized_ex = []
         
         for a_i in range(n_attributes):
-            if type(ex[a_i]) is float:
+            if isinstance(ex[a_i], float) or isinstance(ex[a_i], int):
                 normalized_a = 1 # for the case that MIN = MAX
                 if mins[a_i] != maxs[a_i]:
                     normalized_a = (ex[a_i] - mins[a_i]) / (maxs[a_i]- mins[a_i])
@@ -115,57 +103,41 @@ def normalize(data):
     return normalized_data
 
 # convert strings into types
-def parse(attributes):
+def parse(a_vector):
     new_vector = []
-    for a in attributes:
+    for a in a_vector:
         try:
-            new_vector.append(float(a))
+            converted_a = float(a)
+            new_vector.append(int(converted_a) if converted_a.is_integer() else converted_a) 
         except ValueError:
-            new_vector.append(a)
+            new_vector.append(a)    # this value must be a discrete attribute
     return new_vector
-
-def test_8020(T, k):
-    shuffle(T)
-    sample_size = int(len(T) * 0.8)
-    test_set = T[:sample_size]
-    training_set = T[sample_size:]
-
-    print(F'Testing {sample_size} examples')
-
-    weighted_errors = 0
-    unweighted_errors = 0
-
-    for x in test_set:
-        if knn(training_set, x, k, True) != x[-1]:
-            weighted_errors += 1
-        if knn(training_set, x, k, False) != x[-1]:
-            unweighted_errors += 1
-
-    print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
-    print(F'Error rate for unweighted knn is {100 * unweighted_errors / sample_size:.2f}')
     
+# run some parsing tests
 if __name__ == "__main__":
-    abalone = "abalone.data"
-    iris = "iris.data"
-    ecoli = "ecoli.data"
-    iris_data = read_data(iris)
-    abalone_data = read_data(abalone)
-    ecoli_data = read_data(ecoli)
+    # testing distance function
+    x = [2, 4, 2]
+    distance_test = [[1, 3, 1, 'classA'], [3, 5, 2, 'ClassB'], [3, 2, 2, 'classC'], [5, 2, 3, 'classD']]
+    distance_answers = [math.sqrt(3), math.sqrt(2), math.sqrt(5), math.sqrt(14)]
+    distance_results = [distance(x, t) for t in distance_test]
 
-    #print("This is for abalone")
-    #knn(abalone_data, abalone_data[2], 10, True)
+    print('CHEKCING distance function...')
+    for x, y in zip(distance_results, distance_answers):
+        if x != y:
+            print('Distance function failed! got ', x, ' when it was supposed to get ', y)
 
-    print("\nThis is for irises:\n" + "-"*40)
-    knn(iris_data, iris_data[2], 5, True, True)
+    print('CHECKING parser...')
+    unparsed_data = ['1,1,2,a,2.3', '3,4,5,1,k,3.0', '2,a,cb,34,r,3.4']
+    unparsed_data = [s.split(',') for s in unparsed_data]
 
-    print("\nThis is for abalones:\n" + "-"*40)
-    knn(abalone_data, abalone_data[90], 5, True, True)
+    parsed_results = [parse(a_vector) for a_vector in unparsed_data]
+    parsed_answers = [[1, 1, 2, 'a', 2.3], [3, 4, 5, 1, 'k', 3], [2, 'a', 'cb', 34, 'r', 3.4]]
+    for x, y in zip(parsed_results, parsed_answers):
+        if x != y:
+            print('Parser failed! got ', x, ' instead of ', y)
+    
+    print('CHECKING normalizer...')
+    # TODO ^^ THAT
 
-    # This poopoo broke bc of the data file
-    # TODO: find new dataset asap << LMAO!
-    print("\nThis is for ecoli:\n" + "-"*40)
-    knn(ecoli_data, ecoli_data[2], 5, True, True)
-
-    # testing
-    test_8020(iris_data, 5)
-    test_8020(abalone_data, 5)
+    
+    
