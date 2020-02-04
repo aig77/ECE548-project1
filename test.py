@@ -1,4 +1,6 @@
 from knn import *
+from os import listdir
+from os.path import isfile, join
 
 def read_data(name, classAt=-1):
     f = open(name, "r")
@@ -55,23 +57,15 @@ def test_8020(T, k, normalized=False, debug=False):
     print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
 
 if __name__ == '__main__':
+    # location of .data files
+    path = "datasets"
+    files = [f for f in listdir(path) if isfile(join(path, f))]
 
-    # include data file names
-    abalone = "abalone.data"
-    iris = "iris.data"
-    ionosphere = "ionosphere.data"
-
-    # read from files and store into data arrays
-    iris_data = read_data(iris)
-    abalone_data = read_data(abalone)
-    ionosphere_data = read_data(ionosphere)
-
-
-    print("\nThis is for irises:\n" + "-"*40)
-    test_8020(iris_data, 5, normalized=True)
+    for f in files:
+        data = read_data(path + '/' + f)
+        print("\nThis is for " + f + ":\n" + "-"*40)
+        test_8020(data, 5, normalized=True)
 
     # print("\nThis is for abalones:\n" + "-"*40)
     # test_8020(abalone_data, 5, normalized=True)
 
-    print("\nThis is for ionosphere:\n" + "-"*40)
-    test_8020(ionosphere_data, 5, normalized=True)
