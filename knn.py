@@ -33,8 +33,8 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
     # neighbors is now k nearest neighbors
     neighbors = neighbors[:k]
 
-    if debug:
-        print(neighbors)
+    # if debug:
+    #     print(neighbors)
     
     results = {}
     # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
