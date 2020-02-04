@@ -50,16 +50,18 @@ def test_8020(T, k):
     print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
 
 if __name__ == '__main__':
+
+    # include data file names
     abalone = "abalone.data"
     iris = "iris.data"
     ecoli = "ecoli.data"
+
+    # read from files and store into data arrays
     iris_data = read_data(iris)
     abalone_data = read_data(abalone)
     ecoli_data = read_data(ecoli)
 
-    #print("This is for abalone")
-    #knn(abalone_data, abalone_data[2], 10, True)
-
+    '''
     print("\nThis is for irises:\n" + "-"*40)
     knn(iris_data, iris_data[2], 5, True, True)
 
@@ -70,6 +72,7 @@ if __name__ == '__main__':
     # TODO: find new dataset asap << LMAO!
     print("\nThis is for ecoli:\n" + "-"*40)
     knn(ecoli_data, ecoli_data[2], 5, True, True)
+    '''
 
     # testing
     test_8020(iris_data, 5)
