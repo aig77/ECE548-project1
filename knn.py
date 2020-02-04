@@ -62,6 +62,7 @@ def knn(T, x, k, normalized = False, weighted=False):
             if n[0] not in results:
                 results[n[0]] = 0
             results[n[0]] += (n_max[1] - n[1]) / (n_max[1] - n_min[1]) if not n_max[1] == n_min[1] else 1
+            
         
     else:
         for n in neighbors:
@@ -131,8 +132,10 @@ def parse(attributes):
 if __name__ == "__main__":
     abalone = "abalone.data"
     iris = "iris.data"
+    ecoli = "ecoli.data"
     iris_data = read_data(iris)
     abalone_data = read_data(abalone)
+    ecoli_data = read_data(ecoli)
 
     #print("This is for abalone")
     #knn(abalone_data, abalone_data[2], 10, True)
@@ -142,6 +145,11 @@ if __name__ == "__main__":
 
     print("\nThis is for abalones:\n" + "-"*40)
     knn(abalone_data, abalone_data[90], 5, True, True)
+
+    # This poopoo broke bc of the data file
+    # TODO: find new dataset asap
+    print("\nThis is for ecoli:\n" + "-"*40)
+    knn(ecoli_data, ecoli_data[2], 5, True, True)
 
 
     '''
