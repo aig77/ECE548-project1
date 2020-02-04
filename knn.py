@@ -10,6 +10,7 @@
 '''
 
 import math
+from random import shuffle
 
 def read_data(name):
     f = open(name, "r")
@@ -46,10 +47,6 @@ def knn(T, x, k, normalized = False, weighted=False):
     # neighbors is now k nearest neighbors
 
     neighbors = neighbors[:k]
-
-    print("Nearest neighbors sorted")
-    for n in neighbors:
-        print(n)
     
     results = {}
 
@@ -70,12 +67,8 @@ def knn(T, x, k, normalized = False, weighted=False):
                 results[n[0]] = 0
             results[n[0]] += 1
 
-    print("\nNearest neighbors tallied:")
-    print(results)
-
     # CLASSIFY 
-    print("\nClassification choice:")
-    print(max(results, key = lambda s:results[s]))
+    return (max(results, key = lambda s:results[s]))
 
 def distance(x, ex):
     diffs_squared = []
@@ -129,6 +122,26 @@ def parse(attributes):
             new_vector.append(a)
     return new_vector
 
+def test_8020(T, k):
+    shuffle(T)
+    sample_size = int(len(T) * 0.8)
+    test_set = T[:sample_size]
+    training_set = T[sample_size:]
+
+    print(F'Testing {sample_size} examples')
+
+    weighted_errors = 0
+    unweighted_errors = 0
+
+    for x in test_set:
+        if knn(training_set, x, k, True) != x[-1]:
+            weighted_errors += 1
+        if knn(training_set, x, k, False) != x[-1]:
+            unweighted_errors += 1
+
+    print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
+    print(F'Error rate for unweighted knn is {100 * unweighted_errors / sample_size:.2f}')
+    
 if __name__ == "__main__":
     abalone = "abalone.data"
     iris = "iris.data"
@@ -151,16 +164,6 @@ if __name__ == "__main__":
     print("\nThis is for ecoli:\n" + "-"*40)
     knn(ecoli_data, ecoli_data[2], 5, True, True)
 
-
-    '''
-    print('NOW AT 2')
-    print(iris_data[2])
-    knn(iris_data, iris_data[2], 3, True)
-    print('NOW AT 90')
-    print(iris_data[90])
-    knn(iris_data, iris_data[90], 3, True)
-    print(iris_data[110])
-    print('NOW AT 110')
-    knn(iris_data, iris_data[110], 3, True)
-    '''
-    
+    # testing
+    test_8020(iris_data, 5)
+    test_8020(abalone_data, 5)
