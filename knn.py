@@ -15,7 +15,7 @@ from random import shuffle
 def read_data(name):
     f = open(name, "r")
     data = []
-
+f
     f1 = f.readlines()
     for x in f1:
         if not x == '\n':
@@ -45,7 +45,6 @@ def knn(T, x, k, normalized = False, weighted=False):
     neighbors.sort(key = lambda ex: ex[1])
 
     # neighbors is now k nearest neighbors
-
     neighbors = neighbors[:k]
     
     results = {}
@@ -90,19 +89,21 @@ def distance(x, ex):
 
 def normalize(data):
     n_attributes = len(data[0]) - 1 # class is not included
-    attribute_tally = [ [data[x][y] for x in range(len(data))] for y in range(n_attributes) ]
+    attribute_tally = [ [data[ex][a] for ex in range(len(data))] for a in range(n_attributes) ]
 
-    min_max = [ (min(a), max(a)) for a in attribute_tally ]
-    
+    mins = [ min(a) for a in attribute_tally]
+    maxs = [ max(a) for a in attribute_tally]
+
     normalized_data = []
+
     for ex in data:
         normalized_ex = []
         
         for a_i in range(n_attributes):
             if type(ex[a_i]) is float:
-                normalized_a = 1
-                if min_max[a_i][0] != min_max[a_i][1]:
-                    normalized_a = (ex[a_i] - min_max[a_i][0]) / (min_max[a_i][1] - min_max[a_i][0])
+                normalized_a = 1 # for the case that MIN = MAX
+                if mins[a_i] != maxs[a_i]:
+                    normalized_a = (ex[a_i] - mins[a_i]) / (maxs[a_i]- mins[a_i])
             
                 normalized_ex.append(normalized_a)
             else:
@@ -110,6 +111,7 @@ def normalize(data):
                 
         normalized_ex.append(ex[-1])  # append class onto end for further processing
         normalized_data.append(normalized_ex)
+
     return normalized_data
 
 # convert strings into types
@@ -160,7 +162,7 @@ if __name__ == "__main__":
     knn(abalone_data, abalone_data[90], 5, True, True)
 
     # This poopoo broke bc of the data file
-    # TODO: find new dataset asap
+    # TODO: find new dataset asap << LMAO!
     print("\nThis is for ecoli:\n" + "-"*40)
     knn(ecoli_data, ecoli_data[2], 5, True, True)
 
