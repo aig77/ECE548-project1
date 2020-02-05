@@ -31,30 +31,37 @@ def test_8020(T, k, normalized=False, debug=False):
 
     print(F'Testing {sample_size} examples')
 
-    weighted_errors = 0
-    unweighted_errors = 0
+    average_UW_error_rate = 0
+    average_W_error_rate = 0 
+    num_tests = 100
 
-    for x in test_set:
-        # separate input and class for readability
-        x_input = x[:-1]
-        actual_class = x[-1]
+    for simulation_x in range(num_tests):
+        unweighted_errors = 0
+        weighted_errors = 0
+        for x in test_set:
+                # separate input and class for readability
+                x_input = x[:-1]
+                actual_class = x[-1]
+                
+                result_unweighted = knn(training_set, x_input, k, weighted=False)
+                result_weighted = knn(training_set, x_input, k, weighted=True)
 
-        result_unweighted = knn(training_set, x_input, k, weighted=False)
-        result_weighted = knn(training_set, x_input, k, weighted=True)
+                if  result_unweighted != actual_class:
+                    if debug:
+                        print(F'KNN unweighted classified {x_input} as {result_unweighted} when it should be {actual_class}')
+                    unweighted_errors += 1
+                
+                if  result_weighted != actual_class:
+                    if debug:
+                        print(F'KNN weighted classified {x_input} as {result_weighted} when it should be {actual_class}')
+                    weighted_errors += 1
+        UW_error_rate = 100 * unweighted_errors / sample_size
+        W_error_rate = 100 * weighted_errors / sample_size
+        average_UW_error_rate += UW_error_rate
+        average_W_error_rate += W_error_rate    
 
-        if  result_unweighted != actual_class:
-            if debug:
-                print(F'KNN unweighted classified {x_input} as {result_unweighted} when it should be {actual_class}')
-            unweighted_errors += 1
-        
-        if  result_weighted != actual_class:
-            if debug:
-                print(F'KNN weighted classified {x_input} as {result_weighted} when it should be {actual_class}')
-            weighted_errors += 1
-
-
-    print(F'Error rate for unweighted knn is {100 * unweighted_errors / sample_size:.2f}')
-    print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
+    print(F'Average error rate for unweighted knn is {average_UW_error_rate / num_tests:.2f}')
+    print(F'Average error rate for weighted knn is {average_W_error_rate / num_tests:.2f}')
 
 def ask_k():
     k = int(input("What k would you like to use for each dataset?(n>0): "))
