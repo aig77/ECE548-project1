@@ -56,6 +56,24 @@ def test_8020(T, k, normalized=False, debug=False):
     print(F'Error rate for unweighted knn is {100 * unweighted_errors / sample_size:.2f}')
     print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
 
+def ask_k():
+    k = int(input("What k would you like to use?(n>0): "))
+    while k < 1:
+        k = int(input("(n>0): "))
+    return k
+
+def ask_to_normalize():
+    n = input("Would you like to normalize?(y/n): ")
+    while n != 'y' and n != 'n':
+        n = input("(y/n): ")
+    return True if n == 'y' else False
+
+def ask_debug():
+    db = input("Would you like print debug report?(y/n): ")
+    while db != 'y' and db != 'n':
+        db = input("(y/n): ")
+    return True if db == 'y' else False
+
 if __name__ == '__main__':
     # location of .data files
     path = "datasets"
@@ -64,8 +82,10 @@ if __name__ == '__main__':
     for f in files:
         data = read_data(path + '/' + f)
         print("\nThis is for " + f + ":\n" + "-"*40)
-        test_8020(data, 5, normalized=True)
+        k = ask_k()
+        n = ask_to_normalize()
+        db = ask_debug()
+        test_8020(data, k, normalized=n, debug=db)
 
-    # print("\nThis is for abalones:\n" + "-"*40)
-    # test_8020(abalone_data, 5, normalized=True)
+    
 
