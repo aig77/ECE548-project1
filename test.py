@@ -57,7 +57,7 @@ def test_8020(T, k, normalized=False, debug=False):
     print(F'Error rate for weighted knn is {100 * weighted_errors / sample_size:.2f}')
 
 def ask_k():
-    k = int(input("What k would you like to use?(n>0): "))
+    k = int(input("What k would you like to use for each dataset?(n>0): "))
     while k < 1:
         k = int(input("(n>0): "))
     return k
@@ -69,7 +69,7 @@ def ask_to_normalize():
     return True if n == 'y' else False
 
 def ask_debug():
-    db = input("Would you like print debug report?(y/n): ")
+    db = input("Would you like print debug reports for each dataset?(y/n): ")
     while db != 'y' and db != 'n':
         db = input("(y/n): ")
     return True if db == 'y' else False
@@ -79,12 +79,13 @@ if __name__ == '__main__':
     path = "datasets"
     files = [f for f in listdir(path) if isfile(join(path, f))]
 
+    db = ask_debug()
+    k = ask_k() 
+
     for f in files:
         data = read_data(path + '/' + f)
         print("\nThis is for " + f + ":\n" + "-"*40)
-        k = ask_k()
         n = ask_to_normalize()
-        db = ask_debug()
         test_8020(data, k, normalized=n, debug=db)
 
     
