@@ -21,7 +21,6 @@ from random import shuffle
 '''
 
 def knn(T, x, k, normalized = False, weighted=False, debug=False):
-    # TODO: normalize T such that each attribute is between 0-1
     if normalized:
         T = normalize(T)
     
@@ -76,32 +75,30 @@ def distance(x, ex):
     Doesn't normalized discrete values because how?
 '''
 
-def normalize(data):
-    n_attributes = len(data[0]) - 1 # class is not included
-    attribute_tally = [ [data[ex][a] for ex in range(len(data))] for a in range(n_attributes) ]
+def normalize(dataset):
+    # class is not included
+    n_attributes = len(dataset[0]) - 1
+
+    # transpose the dataset to figure out mins and maxs for each attribute 
+    attribute_tally = [ [instance[a] for instance in dataset] for a in range(n_attributes) ]
 
     mins = [ min(a) for a in attribute_tally]
     maxs = [ max(a) for a in attribute_tally]
 
-    normalized_data = []
-
-    for ex in data:
-        normalized_ex = []
-        
+    # create normalized dataset
+    norm_dataset = []
+    for instance in dataset:
+        norm_instance = []
         for a_i in range(n_attributes):
-            if isinstance(ex[a_i], float) or isinstance(ex[a_i], int):
-                normalized_a = 1 # for the case that MIN = MAX
-                if mins[a_i] != maxs[a_i]:
-                    normalized_a = (ex[a_i] - mins[a_i]) / (maxs[a_i]- mins[a_i])
-            
-                normalized_ex.append(normalized_a)
-            else:
-                normalized_ex.append(ex[a_i]) # strings don't get normalized
-                
-        normalized_ex.append(ex[-1])  # append class onto end for further processing
-        normalized_data.append(normalized_ex)
+            norm_a = 1 # for the case that MIN = MAX (avoid division by zero)
+            if mins[a_i] != maxs[a_i]:
+                norm_a = (instance[a_i] - mins[a_i]) / (maxs[a_i]- mins[a_i])
+            norm_instance.append(norm_a)
 
-    return normalized_data
+        norm_instance.append(instance[-1])  # append class
+        norm_dataset.append(norm_instance)
+
+    return norm_dataset
 
 # convert strings into types
 def parse(a_vector):
