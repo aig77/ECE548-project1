@@ -20,14 +20,51 @@ def read_data(name, classAt=-1):
 
     return data
 
+
+def stratify(T):
+    train_len = 0.2
+
+    # sort T by classifier (last entry)
+    T.sort(key = lambda t:t[-1])
+    # split T into x lists (x = amount of classes) -> call ABC
+    classes = set(t[-1] for t in T)
+    ABC = [[ex for ex in T if ex[-1] == c] for c in classes]
+    
+    # shuffle each class list
+    for i in ABC:
+        shuffle(i)
+
+    # pull 20% of ABC and use as training set (of each classifier)
+    first_20 = []
+
+    for c in ABC:
+        for i in range(int(len(c) * train_len)):
+            first_20.append(c.pop())
+            
+    # other 80% is testing set
+    last_80 = []
+    for i in ABC:
+        for j in i:
+            last_80.append(j)
+
+    # shuffle to simulate random input for testing set
+    shuffle(last_80)
+
+    # then all 80s with all merged 20s
+    merged = first_20 + last_80
+
+    # return new T, len(first_20)
+    return merged, len(first_20)
+
+
 def test_8020(T, k, normalized=False, debug=False):
-    shuffle(T)
+    (T, sample_size) = stratify(T)
+
     if normalized:
         T = normalize(T)
     
-    sample_size = int(len(T) * 0.8)
-    test_set = T[:sample_size]
-    training_set = T[sample_size:]
+    test_set = T[:sample_size+1]
+    training_set = T[sample_size+1:]
 
     print(F'Testing {sample_size} examples')
 
@@ -87,7 +124,8 @@ if __name__ == '__main__':
     files = [f for f in listdir(path) if isfile(join(path, f))]
 
     db = ask_debug() 
-    n = ask_to_normalize()
+    # assume always normalize
+    n = True # ask_to_normalize()
 
     for f in files:
         data = read_data(path + '/' + f)
