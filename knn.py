@@ -39,14 +39,15 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
     results = {}
     # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
     if weighted:
-        n_min = min(neighbors, key = lambda n: n[1])
-        n_max = max(neighbors, key = lambda n: n[1])
+        # returns tuple -> ("classifier", distance)
+        # pull the min and max distance
+        n_min = min(neighbors, key = lambda n: n[1])[1]
+        n_max = max(neighbors, key = lambda n: n[1])[1]
 
         for n in neighbors:
             if n[0] not in results:
                 results[n[0]] = 0
-            results[n[0]] += (n_max[1] - n[1]) / (n_max[1] - n_min[1]) if not n_max[1] == n_min[1] else 1
-            
+            results[n[0]] += (n_max - n[1]) / (n_max - n_min) if not n_max == n_min else 1
         
     else:
         for n in neighbors:
@@ -54,7 +55,7 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
                 results[n[0]] = 0
             results[n[0]] += 1
 
-    # CLASSIFY 
+    # CLASSIFY - returns the concluded classifier
     return (max(results, key = lambda s:results[s]))
 
 def distance(x, ex):
