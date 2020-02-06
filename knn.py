@@ -52,16 +52,7 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
     return (max(results, key = lambda classifier:results[classifier]))
 
 def distance(x, ex):
-    diffs_squared = []
-
-    # if it is a discrete difference count them by 1
-    # ommit CLASS 
-    for i in range(len(x)):
-        if type(x[i]) is str:
-            diffs_squared.append(1 if x[i] != ex[i] else 0)
-        else:
-            diffs_squared.append((ex[i] - x[i]) ** 2)
-    
+    diffs_squared = [(ex[i] - x[i]) ** 2 for i in range(len(x))]
     return math.sqrt(sum(diffs_squared))
 
 '''
