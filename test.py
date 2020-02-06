@@ -70,7 +70,7 @@ def test_8020(T, k, normalized=False, debug=False):
 
     average_UW_error_rate = 0
     average_W_error_rate = 0 
-    num_tests = 100
+    num_tests = 500
 
     for simulation_x in range(num_tests):
         unweighted_errors = 0
@@ -97,8 +97,8 @@ def test_8020(T, k, normalized=False, debug=False):
         average_UW_error_rate += UW_error_rate
         average_W_error_rate += W_error_rate    
 
-    print(F'Average error rate for unweighted knn is {average_UW_error_rate / num_tests:.2f}')
-    print(F'Average error rate for weighted knn is {average_W_error_rate / num_tests:.2f}')
+    print(F'Average error rate for unweighted knn is {average_UW_error_rate / num_tests:.6f}')
+    print(F'Average error rate for weighted knn is {average_W_error_rate / num_tests:.6f}')
 
 def ask_k():
     k = int(input("What k would you like to use?(n>0): "))
