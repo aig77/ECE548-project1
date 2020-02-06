@@ -41,7 +41,8 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
         for n in neighbors:
             if n[1] not in results:
                 results[n[1]] = 0
-            results[n[1]] += (d_k - n[0]) / (d_k - d_1) if not d_k == d_1 else 1
+            # results[n[1]] += (d_k - n[0]) / (d_k - d_1) if not d_k == d_1 else 1
+            results[n[1]] += 1 / n[0] if n[0] != 0 else 1
     else:
         for n in neighbors:
             if n[1] not in results:
