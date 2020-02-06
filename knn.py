@@ -24,38 +24,32 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
     if normalized:
         T = normalize(T)
     
-    # obtain possible neighbors by (class, distance)
-    # and keep K nearest
-    neighbors = [(ex[-1], distance(x, ex)) for ex in T]
-    neighbors.sort(key = lambda ex: ex[1])
+    # obtain possible neighbors by (distance, class)    
+    neighbors = [(distance(x, ex_instance), ex_instance[-1]) for ex_instance in T]
+    neighbors.sort() 
+    neighbors = neighbors[:k] # and keep K nearest
 
-    # neighbors is now k nearest neighbors
-    neighbors = neighbors[:k]
-
-    # if debug:
-    #     print(neighbors)
+    if debug:
+        print(neighbors)
     
     results = {}
-    # wi = (max_d - di) / max_d - min_d if dk != d1 else 1
+
     if weighted:
-        # returns tuple -> ("classifier", distance)
-        # pull the min and max distance
-        n_min = min(neighbors, key = lambda n: n[1])[1]
-        n_max = max(neighbors, key = lambda n: n[1])[1]
+        # obtain closest and furthest neighbor distances
+        d_1, d_k = neighbors[0][0], neighbors[-1][0]
 
         for n in neighbors:
-            if n[0] not in results:
-                results[n[0]] = 0
-            results[n[0]] += (n_max - n[1]) / (n_max - n_min) if not n_max == n_min else 1
-        
+            if n[1] not in results:
+                results[n[1]] = 0
+            results[n[1]] += (d_k - n[0]) / (d_k - d_1) if not d_k == d_1 else 1
     else:
         for n in neighbors:
-            if n[0] not in results:
-                results[n[0]] = 0
-            results[n[0]] += 1
+            if n[1] not in results:
+                results[n[1]] = 0
+            results[n[1]] += 1
 
-    # CLASSIFY - returns the concluded classifier
-    return (max(results, key = lambda s:results[s]))
+    # the class with most weight classifies X
+    return (max(results, key = lambda classifier:results[classifier]))
 
 def distance(x, ex):
     diffs_squared = []
