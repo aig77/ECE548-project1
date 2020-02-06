@@ -24,7 +24,7 @@ def read_data(name, classAt=-1):
 
 
 def stratify(T):
-    train_len = 0.2
+    train_len = 0.1
 
     # sort T by classifier (last entry)
     T.sort(key = lambda t:t[-1])
@@ -67,14 +67,14 @@ def test_8020(T, k, normalized=True, debug=False, dataset_title =''):
     if normalized:
         T = normalize(T)
     
-    num_tests = 1000
+    num_tests = 100
     UW_error_rates = []
     W_error_rates = []
 
     for simulation_x in range(num_tests):
         # randomize testing and training set        
         (T, sample_size) = stratify(T)
-
+        
         # say sample_size on first go
         if simulation_x == 0:
             print(F'Testing {sample_size} examples')
@@ -101,10 +101,10 @@ def test_8020(T, k, normalized=True, debug=False, dataset_title =''):
                 if debug:
                     print(F'KNN weighted classified {x_input} as {result_weighted} when it should be {actual_class}')
                 weighted_errors += 1
+        
         UW_error_rates.append(100 * unweighted_errors / sample_size)
         W_error_rates.append(100 * weighted_errors / sample_size)
-    
-    
+
     average_UW_error_rate = sum(UW_error_rates) / num_tests
     average_W_error_rate = sum(W_error_rates) / num_tests
 
