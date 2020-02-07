@@ -157,7 +157,7 @@ if __name__ == '__main__':
     for f in files:
         data = read_data(F"{path}/{f}")
         print(F'\n{f}:\n' + '-'*40)
-        test_8020(data, k, debug=db, dataset_title=f, num_tests=100)
+        test_8020(data, k, debug=db, dataset_title=f, num_tests=1)
 
     print("\nExiting...")
 
