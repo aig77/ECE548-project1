@@ -3,6 +3,7 @@ from os import listdir
 from os.path import isfile, join
 import matplotlib
 import matplotlib.pyplot as plt
+from progressbar import ProgressBar
 
 def read_data(name, classAt=-1):
     f = open(name, "r")
@@ -71,13 +72,18 @@ def test_8020(T, k, normalized=True, debug=False, dataset_title ='', num_tests=1
     UW_error_rates = []
     W_error_rates = []
 
-    for simulation_x in range(num_tests):
+    # make the run look sick
+    pbar = ProgressBar()
+
+    for simulation_x in pbar(range(num_tests)):
         # randomize testing and training set        
         (T, sample_size) = stratify(T)
         
         # say sample_size on first go
         if simulation_x == 0:
             print(F'Testing {sample_size} examples')
+            print(F'Running {num_tests} simulations')
+        
         
         test_set = T[:sample_size+1]
         training_set = T[sample_size+1:]
@@ -118,6 +124,9 @@ def test_8020(T, k, normalized=True, debug=False, dataset_title ='', num_tests=1
     
     print(F'Average error rate for unweighted knn is {average_UW_error_rate:.6f}')
     print(F'Average error rate for weighted knn is {average_W_error_rate:.6f}')
+
+    # add some extra space between runs
+    print('\n')
     
     # plot uweighted and weighted error rates
     ax.plot([x + 1 for x in range(num_tests)], UW_error_rates, label='unweighted error rates', alpha=0.5)
@@ -146,10 +155,9 @@ if __name__ == '__main__':
     k = ask_k()
 
     for f in files:
-        data = read_data(path + '/' + f)
-        print("\nThis is for " + f + ":\n" + "-"*40)
-        test_8020(data, k, debug=db, dataset_title=f, num_tests=25)
+        data = read_data(F"{path}/{f}")
+        print(F'\n{f}:\n' + '-'*40)
+        test_8020(data, k, debug=db, dataset_title=f, num_tests=100)
 
-
-    
+    print("\nExiting...")
 
