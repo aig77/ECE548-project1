@@ -10,7 +10,7 @@
 '''
 
 import math
-from random import shuffle
+from random import shuffle, seed
  
 ''' 
     * T = training set
@@ -29,9 +29,6 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
     neighbors.sort() 
     neighbors = neighbors[:k] # and keep K nearest
 
-    if debug:
-        print(neighbors)
-    
     results = {}
 
     if weighted:
@@ -48,6 +45,11 @@ def knn(T, x, k, normalized = False, weighted=False, debug=False):
                 results[n[1]] = 0
             results[n[1]] += 1
 
+    if debug:
+        print(F'n: {neighbors}')
+        print(F'buckets {"weighted" if weighted else "unweighted"}: {results}')
+    
+    
     # the class with most weight classifies X
     return (max(results, key = lambda classifier:results[classifier]))
 
@@ -104,7 +106,7 @@ if __name__ == "__main__":
     distance_answers = [math.sqrt(3), math.sqrt(2), math.sqrt(5), math.sqrt(14)]
     distance_results = [distance(x, t) for t in distance_test]
 
-    print('CHEKCING distance function...')
+    print('CHECKING distance function...')
     for x, y in zip(distance_results, distance_answers):
         if x != y:
             print('Distance function failed! got ', x, ' when it was supposed to get ', y)
